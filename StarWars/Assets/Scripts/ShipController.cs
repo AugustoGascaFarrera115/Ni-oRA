@@ -13,6 +13,7 @@ public class ShipController : MonoBehaviour
     bool Stop = false;
     Animator anim;
 
+    Touch touch;
 
 
 
@@ -25,8 +26,11 @@ public class ShipController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.touchCount > 0)
         {
+
+            //touch = Input.GetTouch(0);
+
             SetTargetPosition();
 
 
@@ -42,15 +46,21 @@ public class ShipController : MonoBehaviour
     }
     void SetTargetPosition()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        touch = Input.GetTouch(0);
+        Ray ray = Camera.main.ScreenPointToRay(touch.position);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 1000))
         {
-            targetPosition = hit.point;
-            //this.transform.LookAt(targetPosition);
-            lookAtTarget = new Vector3(targetPosition.x - transform.position.x, 0, targetPosition.z - transform.position.z);
-            playerRot = Quaternion.LookRotation(lookAtTarget);
-            moving = true;
+            if(hit.collider is BoxCollider)
+            {
+                targetPosition = hit.point;
+                //this.transform.LookAt(targetPosition);
+                lookAtTarget = new Vector3(targetPosition.x - transform.position.x, 0, targetPosition.z - transform.position.z);
+                playerRot = Quaternion.LookRotation(lookAtTarget);
+                moving = true;
+            }
+
+            
 
 
         }
@@ -63,6 +73,11 @@ public class ShipController : MonoBehaviour
 
     }
 
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    Destroy(this.gameObject);
+    //}
 
 
 }
